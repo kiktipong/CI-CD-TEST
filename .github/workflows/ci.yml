@@ -18,12 +18,27 @@ jobs:
       with:
         php-version: 8.2
 
-     # ติดตั้ง phpcs แบบ global (ไม่ใช้ composer.json)
-    - name: Install PHPCS
+    # โหลดทั้ง phpcs และ phpcbf
+    - name: Install PHPCS & PHPCBF
       run: |
         curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
-        chmod +x phpcs.phar
+        curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar
+        chmod +x phpcs.phar phpcbf.phar
 
-    - name: Run Lint (CodeSniffer)
+    # Auto fix
+    - name: Auto Fix Code Style
+      run: php phpcbf.phar src/
+
+    # Check อีกครั้ง
+    - name: Run Lint
       run: php phpcs.phar src/
 
+    # Commit กลับ (กัน loop)
+    - name: Commit fixed code
+      if: github.actor != 'github-actions[bot]'
+      run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "actions@github.com"
+        git add .
+        git commit -m "auto fix code style" || echo "No changes"
+        git push
