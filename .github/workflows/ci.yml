@@ -25,5 +25,5 @@ jobs:
         chmod +x phpcs.phar
 
     - name: Run Lint (CodeSniffer)
-      run: ./vendor/bin/phpcs src/
+      run: php phpcs.phar src/
 
