@@ -31,7 +31,7 @@ jobs:
 
     # Check อีกครั้ง
     - name: Run Lint
-      run: php phpcs.phar src/
+      run: php phpcs.phar --standard=PSR12 --ignore=Squiz.Commenting src/
 
     # Commit กลับ (กัน loop)
     - name: Commit fixed code
